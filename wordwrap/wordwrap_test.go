@@ -54,6 +54,20 @@ func TestWordWrap(t *testing.T) {
 			4,
 			true,
 		},
+		// A breakpoint causes wrapping when just adding it exceeds the limit:
+		{
+			"ab-cd-foo",
+			"ab-\ncd-\nfoo",
+			5,
+			true,
+		},
+		// A breakpoint with no preceding word counts towards when to wrap too:
+		{
+			"foo--bar--foo",
+			"foo-\n-\nbar-\n-foo",
+			4,
+			true,
+		},
 		// Space buffer needs to be emptied before breakpoints:
 		{
 			"foo --bar",

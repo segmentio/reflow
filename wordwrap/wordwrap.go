@@ -135,6 +135,15 @@ func (w *WordWrap) Write(b []byte) (int, error) {
 			_, _ = w.space.WriteRune(c)
 		} else if inGroup(w.Breakpoints, c) {
 			// valid breakpoint
+
+			// add a line break if the current word plus this breakpoint would exceed
+			// the line's character limit
+			breakpointRuneWidth := 1 // printable rune width for any breakpoint
+			if w.lineLen+w.space.Len()+w.word.PrintableRuneWidth()+breakpointRuneWidth > w.Limit &&
+				w.word.PrintableRuneWidth() < w.Limit {
+				w.addNewLine()
+			}
+
 			w.addSpace()
 			w.addWord()
 			w.addBreakpoint(c)
